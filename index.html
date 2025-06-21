@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Msys Innovations Inc. - Website Development Quote</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals & Professional Blue -->
+    <!-- Application Structure Plan: A single-page, vertical-scrolling application designed to guide the client from a general overview to specific details and finally to a call-to-action. The structure is: 1. Hero section for introduction. 2. Interactive Package Selection with three cards to allow focused exploration. 3. A dynamic "Details" section that updates on card selection, containing a feature list and a price comparison chart. This encourages user interaction and makes the information digestible. 4. A "Guided Selector" tool to provide a personalized recommendation, adding value and a 'wow' factor. 5. A final "Next Steps" CTA section to convert interest into a consultation. This flow is more engaging than a static document, turning the quote into a sales tool. -->
+    <!-- Visualization & Content Choices: 1. Package Tiers (Basic, Premium, Expert) -> Goal: Compare/Inform -> Viz: Three interactive HTML/Tailwind cards -> Interaction: On-click, the selected card is highlighted, and its details populate a separate area. Justification: Focuses user attention and avoids overwhelming them with information. 2. Pricing Data ($899, $1999) -> Goal: Compare -> Viz: Chart.js Bar Chart -> Interaction: Hover tooltips show price. Justification: Visually represents the price difference more effectively than text alone. The "Expert" package is omitted from the chart to emphasize its custom nature. 3. Key Features -> Goal: Organize/Compare -> Viz: Dynamically updated HTML list and a static comparison table. Justification: Caters to two user types - those who want a focused view (dynamic list) and those who want to compare all features side-by-side (table). 4. User Guidance -> Goal: Inform/Engage -> Viz: HTML radio-button form. Interaction: User selection triggers a recommendation. Justification: Creates a personalized, helpful experience. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 40vh;
+        }
+        .package-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .package-card.active {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            border-color: #3b82f6; /* blue-500 */
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-stone-900">Msys Innovations Inc.</h1>
+            <a href="#next-steps" class="bg-blue-600 text-white font-semibold px-5 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                Schedule Consultation
+            </a>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section id="hero" class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-stone-900 mb-4">Your Vision, Brought to Life</h2>
+            <p class="text-lg text-stone-600 max-w-3xl mx-auto">
+                We are pleased to provide this interactive quote for your custom website. Explore our packages below to find the perfect fit for your business objectives.
+            </p>
+        </section>
+
+        <section id="packages" class="mb-12">
+            <div class="text-center mb-10">
+                <h3 class="text-3xl font-bold text-stone-900 mb-2">Explore Our Website Packages</h3>
+                <p class="text-md text-stone-600">Click on any package to see a detailed breakdown of its features.</p>
+            </div>
+            <div id="package-cards" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            </div>
+        </section>
+
+        <section id="details" class="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-16 min-h-[400px]">
+             <div id="details-content" class="text-center">
+                <p class="text-xl text-stone-500">Please select a package above to view its details.</p>
+            </div>
+        </section>
+        
+        <section id="guidance" class="bg-blue-50 rounded-2xl p-8 md:p-12 mb-16">
+            <div class="text-center mb-8">
+                 <h3 class="text-3xl font-bold text-stone-900 mb-2">Which Package is Right for You?</h3>
+                <p class="text-md text-stone-600">Answer a few questions to get an instant recommendation.</p>
+            </div>
+            <form id="guidance-form" class="max-w-2xl mx-auto space-y-6">
+                <div>
+                    <label class="font-semibold text-stone-700">How many distinct pages do you envision for your site?</label>
+                    <div class="mt-2 space-y-2">
+                        <label class="flex items-center p-3 bg-white rounded-lg border border-stone-200 cursor-pointer hover:border-blue-400"><input type="radio" name="pages" value="1" class="mr-3 text-blue-600 focus:ring-blue-500"> Just one single, comprehensive page.</label>
+                        <label class="flex items-center p-3 bg-white rounded-lg border border-stone-200 cursor-pointer hover:border-blue-400"><input type="radio" name="pages" value="5" class="mr-3 text-blue-600 focus:ring-blue-500"> A few pages (e.g., Home, About, Services, Contact).</label>
+                        <label class="flex items-center p-3 bg-white rounded-lg border border-stone-200 cursor-pointer hover:border-blue-400"><input type="radio" name="pages" value="many" class="mr-3 text-blue-600 focus:ring-blue-500"> Many pages with complex features and structure.</label>
+                    </div>
+                </div>
+                <div>
+                    <label class="font-semibold text-stone-700">Do you need advanced functionality like e-commerce or user logins?</label>
+                    <div class="mt-2 space-y-2">
+                         <label class="flex items-center p-3 bg-white rounded-lg border border-stone-200 cursor-pointer hover:border-blue-400"><input type="radio" name="features" value="basic" class="mr-3 text-blue-600 focus:ring-blue-500"> No, just a standard informational website.</label>
+                         <label class="flex items-center p-3 bg-white rounded-lg border border-stone-200 cursor-pointer hover:border-blue-400"><input type="radio" name="features" value="expert" class="mr-3 text-blue-600 focus:ring-blue-500"> Yes, I need custom features like selling products or a members area.</label>
+                    </div>
+                </div>
+            </form>
+            <div id="recommendation" class="mt-8 text-center text-xl font-semibold bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto" style="display: none;"></div>
+        </section>
+
+        <section id="next-steps" class="text-center py-16">
+            <h3 class="text-3xl font-bold text-stone-900 mb-4">Ready to Start Your Project?</h3>
+            <p class="text-lg text-stone-600 max-w-3xl mx-auto mb-8">
+                Let's discuss your vision. A detailed consultation allows us to understand your specific needs and ensure we deliver the perfect solution for you.
+            </p>
+            <button class="bg-blue-600 text-white font-bold text-lg px-8 py-4 rounded-lg hover:bg-blue-700 transition-transform hover:scale-105">
+                Schedule Your Free Consultation
+            </button>
+        </section>
+    </main>
+
+    <footer class="bg-stone-800 text-stone-300 py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 Msys Innovations Inc. All rights reserved.</p>
+            <p class="text-sm mt-2">Toronto, CANADA | +1 437 970 6281 | somsankar.mitra86@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const packageData = [
+                {
+                    id: 'basic',
+                    name: 'Basic Website',
+                    price: 899,
+                    priceDisplay: '$899 + tax',
+                    description: 'Ideal for individuals or businesses requiring a simple, single-page online presence. This package focuses on presenting essential information clearly and concisely.',
+                    features: ['One-Page Design', 'Responsive for All Devices', 'Basic Contact Form', 'Social Media Links'],
+                    tag: 'Single Page'
+                },
+                {
+                    id: 'premium',
+                    name: 'Premium Website',
+                    price: 1999,
+                    priceDisplay: '$1999 + tax',
+                    description: 'Designed for businesses that need a more comprehensive online platform with multiple pages to showcase services, products, or detailed information.',
+                    features: ['Multi-Page Design (up to 5)', 'Responsive for All Devices', 'Advanced Contact Forms', 'Image Gallery', 'Basic SEO Optimization', 'Social Media Integration'],
+                    tag: 'Multi-Page'
+                },
+                {
+                    id: 'expert',
+                    name: 'Expert Website',
+                    price: null,
+                    priceDisplay: 'Price on Discussion',
+                    description: 'For clients who require a highly customized solution with specific functionalities, integrations, or complex design elements.',
+                    features: ['Fully Custom Design & Development', 'Unlimited Pages', 'E-commerce / Membership Portals', 'Custom Database Integration', 'Extensive SEO Optimization', 'Ongoing Support Options'],
+                    tag: 'Custom Solution'
+                }
+            ];
+
+            const packageCardsContainer = document.getElementById('package-cards');
+            const detailsContent = document.getElementById('details-content');
+            let priceChart = null;
+
+            function renderCards() {
+                packageData.forEach(pkg => {
+                    const card = document.createElement('div');
+                    card.className = 'package-card bg-white rounded-2xl shadow-md p-8 border-4 border-transparent cursor-pointer hover:shadow-xl';
+                    card.dataset.packageId = pkg.id;
+                    
+                    let priceHTML = pkg.price ? `<p class="text-4xl font-extrabold text-stone-900 mb-2">${pkg.priceDisplay.split(' ')[0]}</p><p class="text-stone-500">${pkg.priceDisplay.split(' ').slice(1).join(' ')}</p>` : `<p class="text-3xl font-bold text-stone-900 mb-2">Custom Price</p><p class="text-stone-500">Let's Talk!</p>`;
+
+                    card.innerHTML = `
+                        <div class="text-center">
+                            <span class="inline-block bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full mb-4">${pkg.tag}</span>
+                            <h4 class="text-2xl font-bold text-stone-800 mb-4">${pkg.name}</h4>
+                            <div class="mb-6 h-20">
+                                ${priceHTML}
+                            </div>
+                            <button class="w-full bg-stone-800 text-white font-semibold py-3 rounded-lg hover:bg-stone-900 transition-colors">View Details</button>
+                        </div>
+                    `;
+                    card.addEventListener('click', () => selectPackage(pkg.id));
+                    packageCardsContainer.appendChild(card);
+                });
+            }
+
+            function selectPackage(packageId) {
+                document.querySelectorAll('.package-card').forEach(c => c.classList.remove('active'));
+                document.querySelector(`[data-package-id="${packageId}"]`).classList.add('active');
+
+                const pkg = packageData.find(p => p.id === packageId);
+                
+                detailsContent.innerHTML = `
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div class="text-left">
+                            <span class="inline-block bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full mb-4">${pkg.tag}</span>
+                            <h4 class="text-3xl font-bold text-stone-900 mb-4">${pkg.name}</h4>
+                            <p class="text-stone-600 mb-6">${pkg.description}</p>
+                            <h5 class="text-xl font-semibold text-stone-800 mb-3">Key Features:</h5>
+                            <ul class="space-y-2">
+                                ${pkg.features.map(f => `<li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10003;</span><span>${f}</span></li>`).join('')}
+                            </ul>
+                        </div>
+                        <div>
+                            <h5 class="text-xl font-semibold text-stone-800 mb-4 text-center">Price Comparison</h5>
+                            <div class="chart-container">
+                                <canvas id="priceChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                renderPriceChart(packageId);
+            }
+            
+            function renderPriceChart(selectedId) {
+                if (priceChart) {
+                    priceChart.destroy();
+                }
+                const ctx = document.getElementById('priceChart').getContext('2d');
+                const chartData = packageData.filter(p => p.price !== null);
+                const selectedPkg = packageData.find(p => p.id === selectedId);
+
+                priceChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: chartData.map(p => p.name),
+                        datasets: [{
+                            label: 'Package Price ($)',
+                            data: chartData.map(p => p.price),
+                            backgroundColor: chartData.map(p => p.id === selectedId ? 'rgba(59, 130, 246, 0.8)' : 'rgba(209, 213, 219, 0.8)'),
+                            borderColor: chartData.map(p => p.id === selectedId ? 'rgba(59, 130, 246, 1)' : 'rgba(209, 213, 219, 1)'),
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `Price: $${context.raw}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                if (selectedPkg.price === null) {
+                    priceChart.data.labels.push(selectedPkg.name);
+                    priceChart.data.datasets[0].data.push(0);
+                    priceChart.data.datasets[0].backgroundColor.push('rgba(239, 68, 68, 0.2)');
+                    priceChart.data.datasets[0].borderColor.push('rgba(239, 68, 68, 1)');
+                    priceChart.options.plugins.tooltip.callbacks.label = function(context) {
+                        if (context.label === selectedPkg.name) return "Price determined on discussion.";
+                        return `Price: $${context.raw}`;
+                    }
+                    priceChart.update();
+                }
+            }
+            
+            const guidanceForm = document.getElementById('guidance-form');
+            const recommendationDiv = document.getElementById('recommendation');
+            guidanceForm.addEventListener('change', () => {
+                const pages = guidanceForm.elements['pages'].value;
+                const features = guidanceForm.elements['features'].value;
+                let recommendation = '';
+
+                if (features === 'expert' || pages === 'many') {
+                    recommendation = 'Based on your needs, our <strong>Expert Package</strong> would be the best fit to build a fully custom solution.';
+                } else if (pages === '5') {
+                    recommendation = 'For a comprehensive multi-page site, we recommend our <strong>Premium Package</strong>.';
+                } else if (pages === '1') {
+                    recommendation = 'For a stylish and effective single-page presence, our <strong>Basic Package</strong> is a great choice.';
+                }
+
+                if (recommendation) {
+                    recommendationDiv.innerHTML = recommendation;
+                    recommendationDiv.style.display = 'block';
+                } else {
+                    recommendationDiv.style.display = 'none';
+                }
+            });
+
+            renderCards();
+            selectPackage('premium'); 
+        });
+    </script>
+</body>
+</html>
